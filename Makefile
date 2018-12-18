@@ -2,8 +2,8 @@ NAME = ./ft_ping
 
 LIB = ./libft/libft.a
 
-#FLAGS =
-FLAGS = -Werror -Wextra -Wall -g
+FLAGS =
+#FLAGS = -Werror -Wextra -Wall -g
 
 SRC = $(wildcard *.c)
 
