@@ -11,7 +11,8 @@
 # **************************************************************************** #
 
 NAME = libft.a
-FLAGS = -Werror -Wextra -Wall
+#FLAGS = -Werror -Wextra -Wall
+FLAGS =
 
 SRC = ft_atoi.c	\
 	  ft_print_color.c	\
@@ -125,7 +126,7 @@ $(NAME): $(SRCO)
 	@ar rc $(NAME)  $(SRCO)
 
 %.o: %.c
-	@gcc -c $(FLAGS) -I libft.h $< -o $@
+	@gcc -c $(FLAGS) $< -o $@
 
 clean:
 	@/bin/rm -f $(SRCO)

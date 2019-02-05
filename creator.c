@@ -9,21 +9,37 @@ static struct icmp	*create_icmp(void)
 	/* icmp->icmp_type = ICMP_TSTAMP; */
 	icmp->icmp_code = 0;
 	icmp->icmp_id = X(getpid());
-	icmp->icmp_seq = g_seq;
+	icmp->icmp_seq = 0;
 	icmp->icmp_cksum = 0;
 	icmp->icmp_cksum = checksum(icmp, sizeof(struct icmp));
 	return (icmp);
 }
 
-/* static struct sockaddr	*create_sockaddr(char *address) */
-/* { */
-/* 	struct sockaddr_in *dstaddr; */
+static void 	create_msg(void)
+{
+	struct msghdr	*msg;
+	struct iovec	*iov;
+	uint8_t			*cbuf;
+	size_t			size;
 
-/* 	dstaddr = (struct sockaddr_in*)Xv(ft_memalloc(sizeof(struct sockaddr_in))); */
-/* 	dstaddr->sin_family = AF_INET; */
-/* 	X(inet_pton(AF_INET, address, &(dstaddr->sin_addr))); // error 0 and -1 */
-/* 	return ((struct sockaddr*)dstaddr); */
-/* } */
+	size = sizeof(struct icmp) + sizeof(struct ip);
+	msg = (struct msghdr*)Xv(ft_memalloc(sizeof(*msg)));
+	cbuf = (uint8_t*)Xv(ft_memalloc(g_env.data_size));
+	iov = (struct iovec*)Xv(ft_memalloc(sizeof(*iov)));
+	iov->iov_base = (uint8_t*)Xv(ft_memalloc(size));
+	iov->iov_len = size;
+
+	msg->msg_name = NULL;
+	msg->msg_namelen = 0;
+	msg->msg_iov = iov;
+	msg->msg_iovlen = 1;
+	msg->msg_control = cbuf;
+	msg->msg_controllen = sizeof(cbuf);
+	msg->msg_flags = 0;
+	g_env.msg = msg;
+	g_env.ip = iov->iov_base;
+	g_env.icmp_recv = (struct icmp*)(g_env.ip + 1);
+}
 
 static struct sockaddr	*get_sockaddr(char *address)
 {
@@ -39,8 +55,6 @@ static struct sockaddr	*get_sockaddr(char *address)
 		ft_printf("ping: cannot resolve %s: Unknown host\n", address);
 		exit(-1);
 	}
-	/* while (addrinfo) */
-		/* addrinfo = addrinfo->ai_next; */
 	return (addrinfo->ai_addr);
 }
 
@@ -53,17 +67,29 @@ static void				get_ipstr(t_env *env, struct sockaddr *addr)
 			  INET_ADDRSTRLEN);
 }
 
-t_env			*create_env(char *address)
+static void				set_timeouts(void)
 {
-	/* t_env *env; */
+	struct timeval timeout;
 
-	ft_bzero(&g_env, sizeof(g_env));
-	/* g_env = (t_env*)Xv(malloc(sizeof(*env))); */
+
+    timeout.tv_sec = 1;
+    timeout.tv_usec = 0;
+	X(setsockopt (g_env.sockfd,
+				  SOL_SOCKET, SO_RCVTIMEO,
+				  (char *)&timeout,
+				  sizeof(timeout)));
+    /* X(setsockopt (g_env.sockfd, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, */
+                /* sizeof(timeout))) */
+}
+
+void					create_env(char *address)
+{
 	g_env.dst_addr = get_sockaddr(address);
-	g_env.sockfd = X(socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP));
-	get_ipstr(&g_env, g_env.dst_addr);
-	g_env.icmp = create_icmp();
 	g_env.data_size = 56;
+	create_msg();
+	g_env.sockfd = X(socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP));
+	set_timeouts();
+	get_ipstr(&g_env, g_env.dst_addr);
+	g_env.icmp_send = create_icmp();
 	g_env.address = address;
-	return (&g_env);
 }

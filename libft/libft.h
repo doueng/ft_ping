@@ -18,6 +18,7 @@
 # include <unistd.h>
 # include "get_next_line.h"
 # include "ft_printf/ft_printf.h"
+# include <stdint.h>
 
 # define MAX_INT 2147483647
 # define MIN_INT -2147483648

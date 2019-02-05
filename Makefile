@@ -19,6 +19,8 @@ $(NAME): $(SRCO)
 
 clean:
 	@/bin/rm -f $(SRCO)
+	@/bin/rm -f compile_commands.json
+	@/bin/rm -f ft_ping.dSYM
 
 fclean: clean
 	@/bin/rm -f $(NAME)

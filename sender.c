@@ -1,21 +1,22 @@
 #include "ft_ping.h"
 
-void	sender(t_env *env)
+void	sender(void)
 {
 	struct icmp			*icmp;
 	uint8_t				*packet;
 	size_t				packet_size;
 
-	icmp = env->icmp;
-	packet_size = sizeof(*icmp) + env->data_size;
+	icmp = g_env.icmp_send;
+	packet_size = sizeof(*icmp) + g_env.data_size;
 	packet = Xv(ft_memalloc(packet_size));
 	ft_memcpy(packet, icmp, sizeof(*icmp));
 	X(sendto(
-		  env->sockfd,
+		  g_env.sockfd,
 		  packet,
 		  packet_size,
 		  0,
-		  env->dst_addr,
+		  g_env.dst_addr,
 		  sizeof(struct sockaddr_in)));
+	g_env.packets_sent++;
 	free(packet);
 }

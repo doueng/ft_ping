@@ -1,23 +1,23 @@
 #include "ft_ping.h"
 
-struct msghdr	*receiver(int sockfd, struct msghdr	*msg)
+void	receiver(void)
 {
 	struct icmp		*icmp;
+	int				ret;
 
 	icmp = NULL;
 	while (icmp == NULL)
 	{
-		X(recvmsg(sockfd, msg, 0));
-		icmp = msg->msg_iov->iov_base + sizeof(struct ip);
+		ret = (recvmsg(g_env.sockfd, g_env.msg, 0));
+		if (ret == -1 && errno == EWOULDBLOCK)
+		{
+			ft_printf("Request timeout for icmp_seq %d\n", g_env.icmp_send->icmp_seq);
+			main_loop();
+		}
+		X(ret);
+		icmp = g_env.icmp_recv;
 		if (icmp->icmp_id == X(getpid()))
 			break ;
 	}
-
-	/* icmp = Xv(malloc(sizeof(*icmp))); */
-	/* ft_memcpy(icmp, msg->msg_iov->iov_base + sizeof(struct ip), sizeof(*icmp)); */
-	/* ft_printf("ttl %d\n", ((struct ip*)msg->msg_iov->iov_base)->ip_ttl); */
-	/* free(msg->msg_iov->iov_base); */
-	/* free(msg->msg_iov); */
-	/* free(msg); */
-	return (msg);
+	g_env.packets_recv++;
 }
