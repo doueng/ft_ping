@@ -12,6 +12,7 @@ SRCO = $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(SRCO)
+	make -C libft
 	@gcc $(SRCO) $(LIB) -o $(NAME)
 
 %.o: %.c

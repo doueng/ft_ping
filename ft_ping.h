@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_ping.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dengstra <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/02/11 12:00:49 by dengstra          #+#    #+#             */
+/*   Updated: 2019/02/11 12:00:50 by dengstra         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_PING_H
 # define FT_PING_H
 
@@ -14,8 +26,16 @@
 # include <sys/time.h>
 # include <errno.h>
 
-# define Xv(res)	(x_void(res,__FILE__,__LINE__))
-# define X(res)		(x_int(res,__FILE__,__LINE__))
+enum
+{
+	READ,
+	RECV,
+	GETPID,
+	MALLOC,
+	SENDTO,
+	SETSOCK,
+	SOCKET
+};
 
 typedef struct		s_env
 {
@@ -36,6 +56,8 @@ typedef struct		s_env
 
 extern t_env		g_env;
 
+int					x(int res, int error);
+void				*xv(void *res, int error);
 void				sig_term(int sigid);
 uint16_t			checksum(void *b, int len);
 void				main_loop(void);

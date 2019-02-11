@@ -1,27 +1,47 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   x.c                                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dengstra <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/02/11 12:00:17 by dengstra          #+#    #+#             */
+/*   Updated: 2019/02/11 12:00:24 by dengstra         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "ft_ping.h"
 
-int	x_int(int res, char *file, int line)
+static char	*get_error_msg(int error)
 {
-  if (res == -1)
-    {
-      fprintf(stderr, "Error (%s, %d): %s\n",
-	      file, line, strerror(errno));
-      exit (1);
-    }
-  return (res);
+	char *msg;
+
+	msg = "ERROR";
+	msg = error == READ ? "read failed" : msg;
+	msg = error == RECV ? "recv failed" : msg;
+	msg = error == GETPID ? "getpid failed" : msg;
+	msg = error == SENDTO ? "sendto failed" : msg;
+	msg = error == SETSOCK ? "setsock failed" : msg;
+	msg = error == SOCKET ? "socket failed" : msg;
+	return (msg);
 }
 
-void	*x_void(void *res, char *file, int line)
+int			x(int res, int error)
+{
+	if (res != 0)
+	{
+		fprintf(stderr, "Error: %s\n", get_error_msg(error));
+		exit(-1);
+	}
+	return (res);
+}
+
+void		*xv(void *res, int error)
 {
 	if (res == NULL)
-    {
-      fprintf(stderr, "Error (%s, %d): %s\n",
-	      file, line, strerror(errno));
-      exit (1);
-    }
-  return (res);
+	{
+		fprintf(stderr, "Error: %s\n", get_error_msg(error));
+		exit(-1);
+	}
+	return (res);
 }

@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dengstra <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/02/11 12:00:14 by dengstra          #+#    #+#             */
+/*   Updated: 2019/02/11 12:00:14 by dengstra         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ping.h"
 
-void sig_alarm(int sigid)
+void			sig_alarm(int sigid)
 {
 	if (sigid != SIGALRM)
 		return ;
@@ -9,17 +21,18 @@ void sig_alarm(int sigid)
 
 static double	calc_packet_loss(double pkt_sent, double pkt_recv)
 {
-	// divide by zero
+	pkt_sent = pkt_sent == 0 ? 1 : pkt_sent;
 	return (((pkt_sent - pkt_recv) / pkt_sent) * 100);
 }
 
-void sig_term(int sigid)
+void			sig_term(int sigid)
 {
 	if (sigid != SIGINT)
 		return ;
-	printf("%zu packets transmitted, %zu packets received, %.1f%% packet loss\n",
-			g_env.packets_sent,
-			g_env.packets_recv,
-			calc_packet_loss(g_env.packets_sent, g_env.packets_recv));
+	printf(
+		"%zu packets transmitted, %zu packets received, %.1f%% packet loss\n",
+		g_env.packets_sent,
+		g_env.packets_recv,
+		calc_packet_loss(g_env.packets_sent, g_env.packets_recv));
 	exit(0);
 }
