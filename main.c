@@ -21,7 +21,7 @@ static int	get_options(char *op_str)
 	options = 0;
 	if (op_str[0] != '-')
 		return (options);
-	x(ft_strcmp(op_str, "-"), INVALID_OPTION);
+	x(ft_strequ(op_str, "-") ? -1 : 0, INVALID_OPTION);
 	while (*++op_str)
 	{
 		if (*op_str == 'h')

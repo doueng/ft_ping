@@ -31,9 +31,9 @@ void	sender(struct icmp *icmp_send)
 
 	update_icmp_send(icmp_send);
 	g_env.data_size += g_env.sweepinc;
-	packet_size = ICMP_MINLEN + g_env.data_size;
+	packet_size = ICMP_SIZE + g_env.data_size;
 	packet = (uint8_t*)xv(ft_memalloc(packet_size), MALLOC);
-	ft_memcpy(packet, icmp_send, ICMP_MINLEN);
+	ft_memcpy(packet, icmp_send, ICMP_SIZE);
 	x(sendto(
 		    g_env.sockfd,
 			packet,

@@ -29,6 +29,8 @@
 # define H_OP 0b1
 # define V_OP 0b10
 
+# define ICMP_SIZE ICMP_MINLEN
+
 enum
 {
 	READ,
@@ -45,6 +47,7 @@ enum
 typedef struct		s_env
 {
 	struct sockaddr	*dst_addr;
+	char			*arg;
 	int				sockfd;
 	int				options;
 	size_t			data_size;

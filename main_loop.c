@@ -23,8 +23,11 @@ static void		printer(struct ip *ip_recv, struct icmp *icmp_recv, double triptime
 		icmp_recv->icmp_seq,
 		ip_recv->ip_ttl,
 		(triptime / 1000.0));
+	if (ip_recv->ip_len != g_env.data_size + ICMP_SIZE)
+		ft_printf("wrong total length %d instead of %d\n",
+				ip_recv->ip_len,
+				g_env.data_size + ICMP_SIZE);
 }
-
 
 void			main_loop(void)
 {

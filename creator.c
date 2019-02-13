@@ -52,5 +52,6 @@ void					create_env(char *address)
 	g_env.data_size = 56;
 	g_env.id = x(getpid(), GETPID);
 	g_env.sockfd = x(socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP), SOCKET);
+	g_env.arg = address;
 	/* set_timeouts(); */
 }

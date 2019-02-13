@@ -29,6 +29,7 @@ void			sig_term(int sigid)
 {
 	if (sigid != SIGINT)
 		return ;
+	ft_printf("--- %s ping statistics ---\n", g_env.arg);
 	printf(
 		"%zu packets transmitted, %zu packets received, %.1f%% packet loss\n",
 		g_env.packets_sent,
