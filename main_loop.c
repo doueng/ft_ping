@@ -12,37 +12,33 @@
 
 #include "ft_ping.h"
 
-static void		printer(double triptime)
+static void		printer(struct ip *ip_recv, struct icmp *icmp_recv, double triptime)
 {
-	printf("%zu bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n",
-		g_env.data_size + 8,
-		g_env.ipstr,
-		g_env.icmp_recv->icmp_seq,
-		/* g_env.icmp_recv->icmp_lifetime, */
-		g_env.ip->ip_ttl,
+	char src_addr[INET_ADDRSTRLEN + 1];
+
+	(void)icmp_recv;
+	printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n",
+		ip_recv->ip_len,
+		get_ipstr(src_addr, &ip_recv->ip_src),
+		icmp_recv->icmp_seq,
+		ip_recv->ip_ttl,
 		(triptime / 1000.0));
 }
 
-static void		update_icmp_send(void)
-{
-	struct icmp		*icmp_send;
-
-	icmp_send = g_env.icmp_send;
-	icmp_send->icmp_seq = g_env.seq++;
-	icmp_send->icmp_cksum = 0;
-	icmp_send->icmp_cksum = checksum(g_env.icmp_send, sizeof(struct icmp));
-}
 
 void			main_loop(void)
 {
 	struct timeval	send_time;
 	struct timeval	recv_time;
+	struct icmp		icmp_send;
+	struct icmp		icmp_recv;
+	struct ip		ip_recv;
 
-	update_icmp_send();
+	ft_bzero(&icmp_recv, sizeof(icmp_recv));
+	sender(&icmp_send);
 	gettimeofday(&send_time, NULL);
-	sender();
-	receiver();
+	receiver(&ip_recv, &icmp_recv);
 	gettimeofday(&recv_time, NULL);
-	printer((recv_time.tv_usec - send_time.tv_usec));
+	printer(&ip_recv, &icmp_recv, recv_time.tv_usec - send_time.tv_usec);
 	alarm(1);
 }

@@ -26,6 +26,9 @@
 # include <sys/time.h>
 # include <errno.h>
 
+# define H_OP 0b1
+# define V_OP 0b10
+
 enum
 {
 	READ,
@@ -34,35 +37,34 @@ enum
 	MALLOC,
 	SENDTO,
 	SETSOCK,
-	SOCKET
+	SOCKET,
+	USAGE,
+	INVALID_OPTION
 };
 
 typedef struct		s_env
 {
-	int				sockfd;
 	struct sockaddr	*dst_addr;
-	struct icmp		*icmp_send;
-	struct msghdr	*msg;
-	struct icmp		*icmp_recv;
-	struct ip		*ip;
+	int				sockfd;
+	int				options;
 	size_t			data_size;
-	char			*address;
-	char			*canonname;
-	char			ipstr[INET_ADDRSTRLEN + 1];
 	uint16_t		seq;
 	size_t			packets_sent;
 	size_t			packets_recv;
+	int				sweepinc;
+	int				id;
 }					t_env;
 
 extern t_env		g_env;
 
+char				*get_ipstr(char *ipstr, void *addr);
+void				receiver(struct ip *ip_recv, struct icmp *icmp_recv);
+void				sender(struct icmp *icmp_send);
 int					x(int res, int error);
 void				*xv(void *res, int error);
 void				sig_term(int sigid);
 uint16_t			checksum(void *b, int len);
 void				main_loop(void);
-void				receiver(void);
-void				sender(void);
 void				create_env(char *address);
 unsigned short		checksum(void *b, int len);
 void				*x_void(void *res, char *file, int line);

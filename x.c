@@ -23,12 +23,14 @@ static char	*get_error_msg(int error)
 	msg = error == SENDTO ? "sendto failed" : msg;
 	msg = error == SETSOCK ? "setsock failed" : msg;
 	msg = error == SOCKET ? "socket failed" : msg;
+	msg = error == USAGE ? "Usage: ./ft_ping <host>" : msg;
+	msg = error == INVALID_OPTION ? "Invaid option" : msg;
 	return (msg);
 }
 
 int			x(int res, int error)
 {
-	if (res != 0)
+	if (res == -1)
 	{
 		fprintf(stderr, "Error: %s\n", get_error_msg(error));
 		exit(-1);

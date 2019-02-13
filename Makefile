@@ -2,8 +2,7 @@ NAME = ./ft_ping
 
 LIB = ./libft/libft.a
 
-FLAGS =
-#FLAGS = -Werror -Wextra -Wall -g
+FLAGS = -Werror -Wextra -Wall -g
 
 SRC = $(wildcard *.c)
 
@@ -21,7 +20,7 @@ $(NAME): $(SRCO)
 clean:
 	@/bin/rm -f $(SRCO)
 	@/bin/rm -f compile_commands.json
-	@/bin/rm -f ft_ping.dSYM
+	@/bin/rm -rf ft_ping.dSYM
 
 fclean: clean
 	@/bin/rm -f $(NAME)

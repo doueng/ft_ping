@@ -12,25 +12,57 @@
 
 #include "ft_ping.h"
 
-void	receiver(void)
+void	receiver(struct ip *ip_recv, struct icmp *icmp_recv)
 {
-	struct icmp		*icmp;
 	int				ret;
+	int				i;
 
-	icmp = NULL;
-	while (icmp == NULL)
+	struct msghdr		msg;
+	struct iovec		iov[1];
+	struct sockaddr_in	sin;
+	char				*databuff;
+
+	databuff = xv(ft_memalloc(g_env.data_size), MALLOC);
+	ft_bzero(&sin, sizeof(sin));
+	msg.msg_name = &sin;
+	msg.msg_namelen = sizeof(sin);
+	ft_bzero(iov, sizeof(struct iovec));
+	msg.msg_iov = iov;
+	msg.msg_iovlen = 1;
+	/* msg.msg_control = NULL; */
+	/* msg.msg_controllen = 0; */
+	char control[1000];
+	ft_bzero(control, 1000);
+	msg.msg_control = control;
+	msg.msg_controllen = 1000;
+	iov[0].iov_base = databuff;
+	iov[0].iov_len = g_env.data_size;
+	msg.msg_flags = 0;
+	i = 0;
+	while (i++ < 3)
 	{
-		ret = (recvmsg(g_env.sockfd, g_env.msg, 0));
+		ret = (recvmsg(g_env.sockfd, &msg, 0));
 		if (ret == -1 && errno == EWOULDBLOCK)
 		{
-			ft_printf("Request timeout for icmp_seq %d\n",
-					g_env.icmp_send->icmp_seq);
-			main_loop();
+			perror(strerror(errno));
+			fprintf(stderr, " * ");
+			continue ;
 		}
 		x(ret, RECV);
-		icmp = g_env.icmp_recv;
-		if (icmp->icmp_id == x(getpid(), GETPID))
-			break ;
+		ft_memcpy(
+			ip_recv,
+			databuff,
+			sizeof(*ip_recv));
+		ft_memcpy(
+			icmp_recv,
+			databuff + sizeof(struct ip),
+			ICMP_MINLEN);
+		break ;
 	}
+	if (i == 3)
+		ft_printf("Request timeout for icmp_seq %d\n",
+				icmp_recv->icmp_seq);
+	// handle error
 	g_env.packets_recv++;
+	free(databuff);
 }
