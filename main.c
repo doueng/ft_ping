@@ -44,7 +44,6 @@ char		*get_ipstr(char *ipstr, void *addr)
 
 int			main(int argc, char *argv[])
 {
-	char	c;
 	char	ipstr[INET_ADDRSTRLEN];
 
 	ft_bzero(&g_env, sizeof(g_env));
@@ -64,6 +63,5 @@ int			main(int argc, char *argv[])
 			get_ipstr(ipstr, &((struct sockaddr_in*)g_env.dst_addr)->sin_addr),
 			g_env.data_size);
 	main_loop();
-	x(read(2, &c, 1), READ);
 	return (0);
 }
