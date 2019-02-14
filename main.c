@@ -49,9 +49,11 @@ int			main(int argc, char *argv[])
 
 	ft_bzero(&g_env, sizeof(g_env));
 	if (argc < 2)
-		return (x(-1, USAGE));
+		x(-1, USAGE);
 	if ((*++argv)[0] == '-')
 		g_env.options = get_options(*argv++);
+	if (g_env.options & H_OP && argc < 4)
+		x(-1, USAGE);
 	if (g_env.options & H_OP)
 		g_env.sweepinc = ft_atoi(*argv++);
 	signal(SIGALRM, sig_alarm);
