@@ -61,6 +61,7 @@ typedef struct		s_packet
 typedef struct		s_env
 {
 	struct sockaddr	*dst_addr;
+	struct addrinfo	*addrinfo;
 	char			*arg;
 	int				sockfd;
 	int				options;
@@ -74,6 +75,7 @@ typedef struct		s_env
 
 extern t_env		g_env;
 
+void				free_packets(void);
 float				roundtrip_min(void);
 float				roundtrip_max(void);
 float				roundtrip_stddev(void);

@@ -26,6 +26,7 @@ static struct sockaddr	*get_sockaddr(char *address)
 		fprintf(stderr, "ping: cannot resolve %s: Unknown host\n", address);
 		exit(-1);
 	}
+	g_env.addrinfo = addrinfo;
 	return (addrinfo->ai_addr);
 }
 

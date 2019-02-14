@@ -12,7 +12,6 @@
 
 #include "ft_ping.h"
 
-
 static void		update_icmp_send(struct icmp *icmp_send)
 {
 	ft_bzero(icmp_send, sizeof(*icmp_send));
@@ -34,14 +33,13 @@ void			sender(struct icmp *icmp_send)
 	packet_size = ICMP_SIZE + g_env.data_size;
 	packet = (uint8_t*)xv(ft_memalloc(packet_size), MALLOC);
 	ft_memcpy(packet, icmp_send, ICMP_SIZE);
-	x(sendto(
-		    g_env.sockfd,
+	x(sendto(g_env.sockfd,
 			packet,
 			packet_size,
 			0,
 			g_env.dst_addr,
 			sizeof(struct sockaddr_in))
-	    , SENDTO);
+		, SENDTO);
 	g_env.packets_sent++;
 	free(packet);
 }

@@ -30,7 +30,6 @@ static void		print_echoreply(struct ip *ip_recv,
 {
 	char src_addr[INET_ADDRSTRLEN + 1];
 
-	ft_bzero(src_addr, sizeof(src_addr));
 	printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n",
 		ip_recv->ip_len,
 		get_ipstr(src_addr, &ip_recv->ip_src),
@@ -41,15 +40,12 @@ static void		print_echoreply(struct ip *ip_recv,
 		printf("wrong total length %d instead of %lu\n",
 				ip_recv->ip_len,
 				g_env.data_size + ICMP_SIZE);
-	else
-		add_packet(send_time, recv_time);
 }
 
 static void		print_icmp(struct ip *ip_recv, struct icmp *icmp_recv)
 {
 	char src_addr[INET_ADDRSTRLEN + 1];
 
-	ft_bzero(src_addr, sizeof(src_addr));
 	g_env.options & V_OP
 	? printf("%d bytes from %s: type = %d, code = %d\n",
 		ip_recv->ip_len,
@@ -68,14 +64,15 @@ void			main_loop(void)
 	struct ip		ip_recv;
 
 	ft_bzero(&icmp_recv, sizeof(icmp_recv));
-	sender(&icmp_send);
 	gettimeofday(&send_time, NULL);
+	sender(&icmp_send);
 	if (receiver(&ip_recv, &icmp_recv))
 	{
 		gettimeofday(&recv_time, NULL);
 		icmp_recv.icmp_type == ICMP_ECHOREPLY
 		? print_echoreply(&ip_recv, &icmp_recv, &send_time, &recv_time)
 		: print_icmp(&ip_recv, &icmp_recv);
+		add_packet(&send_time, &recv_time);
 	}
 	alarm(1);
 }

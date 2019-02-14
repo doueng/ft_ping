@@ -1,18 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_sqrt_float.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dengstra <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/02/14 15:50:08 by dengstra          #+#    #+#             */
+/*   Updated: 2019/02/14 15:50:09 by dengstra         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
-float 	ft_sqrt_float(float n)
+float	ft_sqrt_float(float n)
 {
-  float x;
-  float y;
-  float e;
+	float x;
+	float y;
+	float e;
 
-  x = n;
-  y = 1;
-  e = 0.000001;
-  while(x - y > e)
-  {
-    x = (x + y) / 2;
-    y = n / x;
-  }
-  return (x);
+	x = n;
+	y = 1;
+	e = 0.0001;
+	while (x - y > e)
+	{
+		x = (x + y) / 2;
+		y = n / x;
+	}
+	return (x);
 }

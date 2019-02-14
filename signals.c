@@ -25,20 +25,42 @@ static double	calc_packet_loss(double pkt_sent, double pkt_recv)
 	return (((pkt_sent - pkt_recv) / pkt_sent) * 100);
 }
 
+static void		ft_freeaddr(void)
+{
+	struct addrinfo	*curr;
+	struct addrinfo *tmp;
+
+	curr = g_env.addrinfo;
+	while (curr)
+	{
+		tmp = curr->ai_next;
+		free(curr->ai_addr);
+		free(curr->ai_canonname);
+		free(curr);
+		curr = tmp;
+	}
+}
+
 void			sig_term(int sigid)
 {
 	if (sigid != SIGINT)
 		return ;
+	alarm(0);
 	printf("--- %s ping statistics ---\n", g_env.arg);
 	printf(
 		"%zu packets transmitted, %zu packets received, %.1f%% packet loss\n",
 		g_env.packets_sent,
 		g_env.packets_recv,
 		calc_packet_loss(g_env.packets_sent, g_env.packets_recv));
-	printf("round-trip min/avg/max/stddev = %.3f/%.3f/%.3f/%.3f ms\n",
-		roundtrip_min(),
-		roundtrip_avg(),
-		roundtrip_max(),
-		roundtrip_stddev());
+	if (g_env.packets_recv > 0)
+	{
+		printf("round-trip min/avg/max/stddev = %.3f/%.3f/%.3f/%.3f ms\n",
+			roundtrip_min(),
+			roundtrip_avg(),
+			roundtrip_max(),
+			roundtrip_stddev());
+		free_packets();
+	}
+	ft_freeaddr();
 	exit(0);
 }

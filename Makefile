@@ -2,7 +2,16 @@ NAME = ./ft_ping
 HEADER = ./ft_ping.h
 LIB = ./libft/libft.a
 FLAGS = -Werror -Wextra -Wall -g
-SRC = $(wildcard *.c)
+SRC = checksum.c \
+	creator.c \
+	main.c \
+	main_loop.c \
+	receiver.c \
+	roundtrip.c \
+	sender.c \
+	signals.c \
+	x.c
+
 SRCO = $(SRC:.c=.o)
 
 all: $(NAME)

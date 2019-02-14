@@ -24,20 +24,17 @@ static int	get_options(char *op_str)
 	x(ft_strequ(op_str, "-") ? -1 : 0, USAGE);
 	while (*++op_str)
 	{
-		if (*op_str == 'h')
-			options |= H_OP;
-		else if (*op_str == 'v')
-			options |= V_OP;
-		else
-			return (x(-1, USAGE));
+		*op_str == 'h' ? options |= H_OP : 0;
+		*op_str == 'v' ? options |= V_OP : 0;
+		if (ft_strchr("hv", *op_str) == NULL)
+			x(-1, USAGE);
 	}
 	return (options);
 }
 
-
 char		*get_ipstr(char *ipstr, void *addr)
 {
-	ipstr[INET_ADDRSTRLEN] = 0;
+	ft_bzero(ipstr, INET_ADDRSTRLEN + 1);
 	inet_ntop(AF_INET,
 			addr,
 			ipstr,
@@ -45,7 +42,7 @@ char		*get_ipstr(char *ipstr, void *addr)
 	return (ipstr);
 }
 
-int	main(int argc, char *argv[])
+int			main(int argc, char *argv[])
 {
 	char	c;
 	char	ipstr[INET_ADDRSTRLEN];

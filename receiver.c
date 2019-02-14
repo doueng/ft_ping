@@ -12,41 +12,46 @@
 
 #include "ft_ping.h"
 
-struct icmp	*receiver(struct ip *ip_recv, struct icmp *icmp_recv)
+static void	update_msghdr(struct msghdr *msg)
 {
-	int					ret;
-	struct msghdr		msg;
-	struct iovec		iov[1];
+	struct iovec		*iov;
 	struct sockaddr_in	sin;
 	char				*databuff;
 
 	databuff = xv(ft_memalloc(g_env.data_size), MALLOC);
 	ft_bzero(&sin, sizeof(sin));
-	ft_bzero(&msg, sizeof(msg));
-	ft_bzero(iov, sizeof(struct iovec));
-	msg.msg_name = &sin;
-	msg.msg_namelen = sizeof(sin);
-	msg.msg_iov = iov;
-	msg.msg_iovlen = 1;
-	/* msg.msg_control = NULL; */
-	/* msg.msg_controllen = 0; */
+	ft_bzero(msg, sizeof(msg));
+	iov = xv(ft_memalloc(sizeof(*iov)), MALLOC);
+	msg->msg_name = &sin;
+	msg->msg_namelen = sizeof(sin);
+	msg->msg_iov = iov;
+	msg->msg_iovlen = 1;
 	iov[0].iov_base = databuff;
 	iov[0].iov_len = g_env.data_size;
-	/* msg.msg_flags = 0; */
+}
 
+struct icmp	*receiver(struct ip *ip_recv, struct icmp *icmp_recv)
+{
+	int					ret;
+	struct msghdr		msg;
+	char				*databuff;
+
+	update_msghdr(&msg);
+	databuff = msg.msg_iov[0].iov_base;
 	ret = recvmsg(g_env.sockfd, &msg, MSG_WAITALL);
 	ft_memcpy(ip_recv, databuff, sizeof(*ip_recv));
 	ft_memcpy(icmp_recv, databuff + sizeof(struct ip), ICMP_SIZE);
 	if (ret == -1 && errno == EWOULDBLOCK)
 	{
-		/* fprintf(stderr, " * "); */
 		fprintf(stderr,
 				"Request timeout for icmp_seq %d\n",
 				g_env.seq);
+		free(msg.msg_iov);
 		free(databuff);
 		return (NULL);
 	}
 	g_env.packets_recv++;
 	free(databuff);
+	free(msg.msg_iov);
 	return (icmp_recv);
 }
