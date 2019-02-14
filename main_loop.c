@@ -12,21 +12,51 @@
 
 #include "ft_ping.h"
 
-static void		printer(struct ip *ip_recv, struct icmp *icmp_recv, double triptime)
+static void		add_packet(struct timeval *send_time,
+						struct timeval *recv_time)
+{
+	t_packet *packet;
+
+	packet = xv(malloc(sizeof(*packet)), MALLOC);
+	packet->triptime = recv_time->tv_usec - send_time->tv_usec;
+	packet->next = g_env.packets;
+	g_env.packets = packet;
+}
+
+static void		print_echoreply(struct ip *ip_recv,
+								struct icmp *icmp_recv,
+								struct timeval *send_time,
+								struct timeval *recv_time)
 {
 	char src_addr[INET_ADDRSTRLEN + 1];
 
-	(void)icmp_recv;
+	ft_bzero(src_addr, sizeof(src_addr));
 	printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n",
 		ip_recv->ip_len,
 		get_ipstr(src_addr, &ip_recv->ip_src),
 		icmp_recv->icmp_seq,
 		ip_recv->ip_ttl,
-		(triptime / 1000.0));
+		((recv_time->tv_usec - send_time->tv_usec) / 1000.0));
 	if (ip_recv->ip_len != g_env.data_size + ICMP_SIZE)
-		ft_printf("wrong total length %d instead of %d\n",
+		printf("wrong total length %d instead of %lu\n",
 				ip_recv->ip_len,
 				g_env.data_size + ICMP_SIZE);
+	else
+		add_packet(send_time, recv_time);
+}
+
+static void		print_icmp(struct ip *ip_recv, struct icmp *icmp_recv)
+{
+	char src_addr[INET_ADDRSTRLEN + 1];
+
+	ft_bzero(src_addr, sizeof(src_addr));
+	g_env.options & V_OP
+	? printf("%d bytes from %s: type = %d, code = %d\n",
+		ip_recv->ip_len,
+		get_ipstr(src_addr, &ip_recv->ip_src),
+		icmp_recv->icmp_type,
+		icmp_recv->icmp_code)
+	: printf("Not an echo reply, enable the -v option to debug\n");
 }
 
 void			main_loop(void)
@@ -40,8 +70,12 @@ void			main_loop(void)
 	ft_bzero(&icmp_recv, sizeof(icmp_recv));
 	sender(&icmp_send);
 	gettimeofday(&send_time, NULL);
-	receiver(&ip_recv, &icmp_recv);
-	gettimeofday(&recv_time, NULL);
-	printer(&ip_recv, &icmp_recv, recv_time.tv_usec - send_time.tv_usec);
+	if (receiver(&ip_recv, &icmp_recv))
+	{
+		gettimeofday(&recv_time, NULL);
+		icmp_recv.icmp_type == ICMP_ECHOREPLY
+		? print_echoreply(&ip_recv, &icmp_recv, &send_time, &recv_time)
+		: print_icmp(&ip_recv, &icmp_recv);
+	}
 	alarm(1);
 }

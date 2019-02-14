@@ -29,11 +29,16 @@ void			sig_term(int sigid)
 {
 	if (sigid != SIGINT)
 		return ;
-	ft_printf("--- %s ping statistics ---\n", g_env.arg);
+	printf("--- %s ping statistics ---\n", g_env.arg);
 	printf(
 		"%zu packets transmitted, %zu packets received, %.1f%% packet loss\n",
 		g_env.packets_sent,
 		g_env.packets_recv,
 		calc_packet_loss(g_env.packets_sent, g_env.packets_recv));
+	printf("round-trip min/avg/max/stddev = %.3f/%.3f/%.3f/%.3f ms\n",
+		roundtrip_min(),
+		roundtrip_avg(),
+		roundtrip_max(),
+		roundtrip_stddev());
 	exit(0);
 }

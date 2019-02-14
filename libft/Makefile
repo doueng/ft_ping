@@ -11,10 +11,10 @@
 # **************************************************************************** #
 
 NAME = libft.a
-#FLAGS = -Werror -Wextra -Wall
-FLAGS =
+FLAGS = -Werror -Wextra -Wall
 
 SRC = ft_atoi.c	\
+	  ft_sqrt_float.c \
 	  ft_print_color.c	\
 	  ft_num_to_string.c	\
 	  btree_get_nth.c	\

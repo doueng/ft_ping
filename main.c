@@ -21,7 +21,7 @@ static int	get_options(char *op_str)
 	options = 0;
 	if (op_str[0] != '-')
 		return (options);
-	x(ft_strequ(op_str, "-") ? -1 : 0, INVALID_OPTION);
+	x(ft_strequ(op_str, "-") ? -1 : 0, USAGE);
 	while (*++op_str)
 	{
 		if (*op_str == 'h')
@@ -29,7 +29,7 @@ static int	get_options(char *op_str)
 		else if (*op_str == 'v')
 			options |= V_OP;
 		else
-			return (x(-1, INVALID_OPTION));
+			return (x(-1, USAGE));
 	}
 	return (options);
 }
@@ -48,21 +48,19 @@ char		*get_ipstr(char *ipstr, void *addr)
 int	main(int argc, char *argv[])
 {
 	char	c;
-	int		options;
 	char	ipstr[INET_ADDRSTRLEN];
 
 	ft_bzero(&g_env, sizeof(g_env));
 	if (argc < 2)
 		return (x(-1, USAGE));
-	options = 0;
 	if ((*++argv)[0] == '-')
-		options = get_options(*argv++);
-	if (options & H_OP)
+		g_env.options = get_options(*argv++);
+	if (g_env.options & H_OP)
 		g_env.sweepinc = ft_atoi(*argv++);
 	signal(SIGALRM, sig_alarm);
 	signal(SIGINT, sig_term);
 	create_env(*argv);
-	ft_printf("PING %s (%s): %zu data bytes\n",
+	printf("PING %s (%s): %zu data bytes\n",
 			*argv,
 			get_ipstr(ipstr, &((struct sockaddr_in*)g_env.dst_addr)->sin_addr),
 			g_env.data_size);

@@ -24,10 +24,10 @@ static void		update_icmp_send(struct icmp *icmp_send)
 	icmp_send->icmp_cksum = checksum(icmp_send, sizeof(struct icmp));
 }
 
-void	sender(struct icmp *icmp_send)
+void			sender(struct icmp *icmp_send)
 {
-	uint8_t				*packet;
-	size_t				packet_size;
+	uint8_t	*packet;
+	size_t	packet_size;
 
 	update_icmp_send(icmp_send);
 	g_env.data_size += g_env.sweepinc;
