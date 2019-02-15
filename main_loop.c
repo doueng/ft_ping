@@ -12,13 +12,23 @@
 
 #include "ft_ping.h"
 
+static double	get_triptime(struct timeval *send_time,
+							 struct timeval *recv_time)
+{
+	double diff_ms;
+
+	diff_ms = ((recv_time->tv_sec - send_time->tv_sec) * 1000.0)
+		+ ((recv_time->tv_usec - send_time->tv_usec) / 1000.0);
+	return (diff_ms);
+}
+
 static void		add_packet(struct timeval *send_time,
 						struct timeval *recv_time)
 {
 	t_packet *packet;
 
 	packet = xv(malloc(sizeof(*packet)), MALLOC);
-	packet->triptime = recv_time->tv_usec - send_time->tv_usec;
+	packet->triptime = get_triptime(send_time, recv_time);
 	packet->next = g_env.packets;
 	g_env.packets = packet;
 }
@@ -31,12 +41,12 @@ static void		print_echoreply(struct ip *ip_recv,
 	char src_addr[INET_ADDRSTRLEN + 1];
 
 	g_env.echoreplys++;
-	printf("%u bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n",
+	printf("%u bytes from (%s): icmp_seq=%d ttl=%d time=%.1f ms\n",
 		revbytes16(ip_recv->ip_len) - (uint16_t)sizeof(struct ip),
 		get_ipstr(src_addr, &ip_recv->ip_src),
 		revbytes16(icmp_recv->icmp_seq),
 		ip_recv->ip_ttl,
-		((recv_time->tv_usec - send_time->tv_usec) / 1000.0));
+		get_triptime(send_time, recv_time));
 }
 
 static void		print_icmp(struct ip *ip_recv, struct icmp *icmp_recv)
@@ -44,7 +54,7 @@ static void		print_icmp(struct ip *ip_recv, struct icmp *icmp_recv)
 	char src_addr[INET_ADDRSTRLEN + 1];
 
 	g_env.options & V_OP
-	? printf("%u bytes from %s: type = %d, code = %d\n",
+	? printf("%u bytes from (%s): type = %d, code = %d\n",
 		revbytes16(ip_recv->ip_len),
 		get_ipstr(src_addr, &ip_recv->ip_src),
 		icmp_recv->icmp_type,

@@ -24,7 +24,7 @@ float			roundtrip_min(void)
 		min = min < curr->triptime ? min : curr->triptime;
 		curr = curr->next;
 	}
-	return (min / 1000);
+	return (min);
 }
 
 float			roundtrip_max(void)
@@ -39,7 +39,7 @@ float			roundtrip_max(void)
 		max = max > curr->triptime ? max : curr->triptime;
 		curr = curr->next;
 	}
-	return (max / 1000);
+	return (max);
 }
 
 float			roundtrip_avg(void)
@@ -54,7 +54,7 @@ float			roundtrip_avg(void)
 		total += curr->triptime;
 		curr = curr->next;
 	}
-	return (total / g_env.packets_recv / 1000);
+	return (total / g_env.packets_recv);
 }
 
 float			roundtrip_stddev(void)
@@ -63,7 +63,7 @@ float			roundtrip_stddev(void)
 	float		variance;
 	t_packet	*curr;
 
-	avg = roundtrip_avg() * 1000;
+	avg = roundtrip_avg();
 	curr = g_env.packets;
 	variance = 0;
 	while (curr)
@@ -72,7 +72,7 @@ float			roundtrip_stddev(void)
 		curr = curr->next;
 	}
 	variance /= g_env.packets_recv;
-	return (ft_sqrt_double(variance) / 1000);
+	return (ft_sqrt_double(variance));
 }
 
 void			free_packets(void)
