@@ -42,6 +42,7 @@ struct icmp	*receiver(struct ip *ip_recv, struct icmp *icmp_recv)
 	ft_memcpy(ip_recv, databuff, sizeof(*ip_recv));
 	ft_memcpy(icmp_recv, databuff + sizeof(*ip_recv), sizeof(*icmp_recv));
 	free(databuff);
+
 	free(msg.msg_iov);
 	g_env.packets_recv += (ret == -1) ? 0 : 1;
 	return ((ret == -1) ? NULL : icmp_recv);
