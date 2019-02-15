@@ -22,7 +22,7 @@ void	*ft_arrayrev(void *a, size_t size, size_t len)
 	ii = 0;
 	while (i-- > 0)
 	{
-		ft_swap(&a[len], &a[ii], size);
+		ft_swap(a + len, a + ii, size);
 		len--;
 		ii++;
 	}

@@ -12,6 +12,14 @@
 
 #include "ft_ping.h"
 
+void			set_signals(void)
+{
+	if (SIG_ERR == signal(SIGALRM, sig_alarm) ||
+		SIG_ERR == signal(SIGINT, sig_term))
+		x(-1, SIGNAL);
+}
+
+
 void			sig_alarm(int sigid)
 {
 	if (sigid != SIGALRM)
@@ -34,7 +42,6 @@ static void		ft_freeaddr(void)
 	while (curr)
 	{
 		tmp = curr->ai_next;
-		free(curr->ai_addr);
 		free(curr->ai_canonname);
 		free(curr);
 		curr = tmp;
@@ -52,13 +59,14 @@ void			sig_term(int sigid)
 		g_env.packets_sent,
 		g_env.packets_recv,
 		calc_packet_loss(g_env.packets_sent, g_env.packets_recv));
-	if (g_env.packets_recv > 0)
+	if (g_env.echoreplys > 0)
 	{
-		printf("round-trip min/avg/max/stddev = %.3f/%.3f/%.3f/%.3f ms\n",
-			roundtrip_min(),
-			roundtrip_avg(),
-			roundtrip_max(),
-			roundtrip_stddev());
+		printf("rtt min/avg/max/stddev = ");
+		printf("%.3f/", roundtrip_min());
+		printf("%.3f/", roundtrip_avg());
+		printf("%.3f/", roundtrip_max());
+		printf("%.3f", roundtrip_stddev());
+		printf(" ms\n");
 		free_packets();
 	}
 	ft_freeaddr();

@@ -12,11 +12,11 @@
 
 #include "libft.h"
 
-float	ft_sqrt_float(float n)
+double	ft_sqrt_double(double n)
 {
-	float x;
-	float y;
-	float e;
+	double x;
+	double y;
+	double e;
 
 	x = n;
 	y = 1;

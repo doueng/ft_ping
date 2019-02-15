@@ -17,10 +17,10 @@ static void		update_icmp_send(struct icmp *icmp_send)
 	ft_bzero(icmp_send, sizeof(*icmp_send));
 	icmp_send->icmp_type = ICMP_ECHO;
 	icmp_send->icmp_code = 0;
-	icmp_send->icmp_id = x(getpid(), GETPID);
-	icmp_send->icmp_seq = g_env.seq++;
+	icmp_send->icmp_id = g_env.id;
+	icmp_send->icmp_seq = revbytes16(g_env.seq++);
 	icmp_send->icmp_cksum = 0;
-	icmp_send->icmp_cksum = checksum(icmp_send, sizeof(struct icmp));
+	icmp_send->icmp_cksum = checksum(icmp_send, ICMP_SIZE);
 }
 
 void			sender(struct icmp *icmp_send)

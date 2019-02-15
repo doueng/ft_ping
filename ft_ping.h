@@ -41,6 +41,7 @@ enum
 	SETSOCK,
 	SOCKET,
 	USAGE,
+	SIGNAL,
 	INVALID_OPTION
 };
 
@@ -71,10 +72,14 @@ typedef struct		s_env
 	size_t			packets_recv;
 	int				sweepinc;
 	t_packet		*packets;
+	int				echoreplys;
+	int				id;
 }					t_env;
 
 extern t_env		g_env;
 
+void				set_signals(void);
+uint16_t			revbytes16(uint16_t bytes);
 void				free_packets(void);
 float				roundtrip_min(void);
 float				roundtrip_max(void);
@@ -85,7 +90,6 @@ char				*get_ipstr(char *ipstr, void *addr);
 void				sender(struct icmp *icmp_send);
 int					x(int res, int error);
 void				*xv(void *res, int error);
-void				sig_term(int sigid);
 uint16_t			checksum(void *b, int len);
 void				main_loop(void);
 void				create_env(char *address);
@@ -93,5 +97,6 @@ unsigned short		checksum(void *b, int len);
 void				*x_void(void *res, char *file, int line);
 int					x_int(int res, char *file, int line);
 void				sig_alarm(int sigid);
+void				sig_term(int sigid);
 
 #endif

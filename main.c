@@ -32,6 +32,24 @@ static int	get_options(char *op_str)
 	return (options);
 }
 
+static char	*parse_args(int argc, char *argv[])
+{
+	if (argc < 2)
+		x(-1, USAGE);
+	if ((*++argv)[0] == '-')
+		g_env.options = get_options(*argv++);
+	if (g_env.options & H_OP)
+	{
+		printf("Usage: ./ft_ping [-vh] destination\n");
+		exit(0);
+	}
+	/* if (g_env.options & H_OP && argc < 4) */
+		/* x(-1, USAGE); */
+	/* if (g_env.options & H_OP) */
+		/* g_env.sweepinc = ft_atoi(*argv++); */
+	return (*argv);
+}
+
 char		*get_ipstr(char *ipstr, void *addr)
 {
 	ft_bzero(ipstr, INET_ADDRSTRLEN + 1);
@@ -45,23 +63,19 @@ char		*get_ipstr(char *ipstr, void *addr)
 int			main(int argc, char *argv[])
 {
 	char	ipstr[INET_ADDRSTRLEN];
+	char	c;
+	char	*destination;
 
 	ft_bzero(&g_env, sizeof(g_env));
-	if (argc < 2)
-		x(-1, USAGE);
-	if ((*++argv)[0] == '-')
-		g_env.options = get_options(*argv++);
-	if (g_env.options & H_OP && argc < 4)
-		x(-1, USAGE);
-	if (g_env.options & H_OP)
-		g_env.sweepinc = ft_atoi(*argv++);
-	signal(SIGALRM, sig_alarm);
-	signal(SIGINT, sig_term);
-	create_env(*argv);
-	printf("PING %s (%s): %zu data bytes\n",
-			*argv,
+	destination = parse_args(argc, argv);
+	set_signals();
+	create_env(destination);
+	printf("PING %s (%s) %zu(%zu) bytes of data.\n",
+			destination,
 			get_ipstr(ipstr, &((struct sockaddr_in*)g_env.dst_addr)->sin_addr),
-			g_env.data_size);
+			g_env.data_size,
+			g_env.data_size + ICMP_SIZE + sizeof(struct ip));
 	main_loop();
+	read(0, &c, 1);
 	return (0);
 }

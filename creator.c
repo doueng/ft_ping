@@ -40,7 +40,7 @@ static void				set_sockopts(int sockfd)
 	timeout.tv_usec = 0;
 	x(setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout))
 		, SETSOCK);
-	ttl = 64;
+	ttl = 60;
 	x(setsockopt(sockfd, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl)), SETSOCK);
 }
 
@@ -48,7 +48,8 @@ void					create_env(char *address)
 {
 	g_env.dst_addr = get_sockaddr(address);
 	g_env.data_size = 56;
-	g_env.sockfd = x(socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP), SOCKET);
+	g_env.sockfd = x(socket(AF_INET, SOCK_RAW, IPPROTO_ICMP), SOCKET);
 	g_env.arg = address;
+	g_env.id = x(getpid(), GETPID);
 	set_sockopts(g_env.sockfd);
 }

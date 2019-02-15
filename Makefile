@@ -4,6 +4,7 @@ LIB = ./libft/libft.a
 FLAGS = -Werror -Wextra -Wall -g
 SRC = checksum.c \
 	creator.c \
+	revbytes.c \
 	main.c \
 	main_loop.c \
 	receiver.c \

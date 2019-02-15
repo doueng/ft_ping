@@ -30,16 +30,13 @@ static void		print_echoreply(struct ip *ip_recv,
 {
 	char src_addr[INET_ADDRSTRLEN + 1];
 
-	printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n",
-		ip_recv->ip_len,
+	g_env.echoreplys++;
+	printf("%u bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n",
+		revbytes16(ip_recv->ip_len) - (uint16_t)sizeof(struct ip),
 		get_ipstr(src_addr, &ip_recv->ip_src),
-		icmp_recv->icmp_seq,
+		revbytes16(icmp_recv->icmp_seq),
 		ip_recv->ip_ttl,
 		((recv_time->tv_usec - send_time->tv_usec) / 1000.0));
-	if (ip_recv->ip_len != g_env.data_size + ICMP_SIZE)
-		printf("wrong total length %d instead of %lu\n",
-				ip_recv->ip_len,
-				g_env.data_size + ICMP_SIZE);
 }
 
 static void		print_icmp(struct ip *ip_recv, struct icmp *icmp_recv)
@@ -47,8 +44,8 @@ static void		print_icmp(struct ip *ip_recv, struct icmp *icmp_recv)
 	char src_addr[INET_ADDRSTRLEN + 1];
 
 	g_env.options & V_OP
-	? printf("%d bytes from %s: type = %d, code = %d\n",
-		ip_recv->ip_len,
+	? printf("%u bytes from %s: type = %d, code = %d\n",
+		revbytes16(ip_recv->ip_len),
 		get_ipstr(src_addr, &ip_recv->ip_src),
 		icmp_recv->icmp_type,
 		icmp_recv->icmp_code)
