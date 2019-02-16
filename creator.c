@@ -51,5 +51,6 @@ void					create_env(char *address)
 	g_env.sockfd = x(socket(AF_INET, SOCK_RAW, IPPROTO_ICMP), SOCKET);
 	g_env.arg = address;
 	g_env.id = x(getpid(), GETPID);
+	g_env.seq = 1;
 	set_sockopts(g_env.sockfd);
 }
