@@ -23,7 +23,7 @@ static char	*get_error_msg(int error)
 	msg = error == SENDTO ? "sendto failed" : msg;
 	msg = error == SETSOCK ? "setsock failed" : msg;
 	msg = error == SOCKET ? "socket failed" : msg;
-	msg = error == USAGE ? "Usage: ./ft_ping [-vh] destination" : msg;
+	msg = error == USAGE ? "Usage: ./ft_ping [-vh] [-t ttl] destination" : msg;
 	msg = error == SIGNAL ? "signal failed" : msg;
 	msg = error == INVALID_OPTION ? "Invaid option" : msg;
 	return (msg);

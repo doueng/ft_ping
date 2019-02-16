@@ -18,7 +18,7 @@ static void	update_msghdr(struct msghdr *msg)
 	struct sockaddr_in	sin;
 	char				*databuff;
 
-	databuff = xv(ft_memalloc(g_env.data_size + sizeof(struct icmp)), MALLOC);
+	databuff = xv(ft_memalloc(sizeof(struct ip) + sizeof(struct icmp)), MALLOC);
 	ft_bzero(&sin, sizeof(sin));
 	iov = xv(ft_memalloc(sizeof(*iov)), MALLOC);
 	msg->msg_name = &sin;
@@ -41,6 +41,8 @@ struct icmp	*receiver(struct ip *ip_recv, struct icmp *icmp_recv)
 	ret = recvmsg(g_env.sockfd, &msg, MSG_WAITALL);
 	ft_memcpy(ip_recv, databuff, sizeof(*ip_recv));
 	ft_memcpy(icmp_recv, databuff + sizeof(*ip_recv), sizeof(*icmp_recv));
+	if (revbytes16(icmp_recv->icmp_id) != g_env.id)
+		receiver(ip_recv, icmp_recv);
 	free(databuff);
 	free(msg.msg_iov);
 	g_env.packets_recv += (ret == -1) ? 0 : 1;

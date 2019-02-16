@@ -17,7 +17,7 @@ static void		update_icmp_send(struct icmp *icmp_send)
 	ft_bzero(icmp_send, sizeof(*icmp_send));
 	icmp_send->icmp_type = ICMP_ECHO;
 	icmp_send->icmp_code = 0;
-	icmp_send->icmp_id = g_env.id;
+	icmp_send->icmp_id = revbytes16(g_env.id);
 	icmp_send->icmp_seq = revbytes16(g_env.seq++);
 	icmp_send->icmp_cksum = 0;
 	icmp_send->icmp_cksum = checksum(icmp_send, ICMP_SIZE);
@@ -29,7 +29,6 @@ void			sender(struct icmp *icmp_send)
 	size_t	packet_size;
 
 	update_icmp_send(icmp_send);
-	g_env.data_size += g_env.sweepinc;
 	packet_size = ICMP_SIZE + g_env.data_size;
 	packet = (uint8_t*)xv(ft_memalloc(packet_size), MALLOC);
 	ft_memcpy(packet, icmp_send, ICMP_SIZE);

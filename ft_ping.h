@@ -28,6 +28,7 @@
 
 # define H_OP 0b1
 # define V_OP 0b10
+# define T_OP 0b100
 
 # define ICMP_SIZE ICMP_MINLEN
 
@@ -70,10 +71,10 @@ typedef struct		s_env
 	uint16_t		seq;
 	size_t			packets_sent;
 	size_t			packets_recv;
-	int				sweepinc;
 	t_packet		*packets;
 	int				echoreplys;
 	int				id;
+	int				ttl;
 }					t_env;
 
 extern t_env		g_env;

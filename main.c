@@ -26,7 +26,8 @@ static int	get_options(char *op_str)
 	{
 		*op_str == 'h' ? options |= H_OP : 0;
 		*op_str == 'v' ? options |= V_OP : 0;
-		if (ft_strchr("hv", *op_str) == NULL)
+		*op_str == 't' ? options |= T_OP : 0;
+		if (ft_strchr("hvt", *op_str) == NULL)
 			x(-1, USAGE);
 	}
 	return (options);
@@ -43,10 +44,10 @@ static char	*parse_args(int argc, char *argv[])
 		printf("Usage: ./ft_ping [-vh] destination\n");
 		exit(0);
 	}
-	/* if (g_env.options & H_OP && argc < 4) */
-		/* x(-1, USAGE); */
-	/* if (g_env.options & H_OP) */
-		/* g_env.sweepinc = ft_atoi(*argv++); */
+	if (g_env.options & T_OP && argc < 4)
+		x(-1, USAGE);
+	if (g_env.options & T_OP)
+		g_env.ttl = ft_atoi(*argv++);
 	return (*argv);
 }
 

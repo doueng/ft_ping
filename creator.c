@@ -52,5 +52,6 @@ void					create_env(char *address)
 	g_env.arg = address;
 	g_env.id = x(getpid(), GETPID);
 	g_env.seq = 1;
+	g_env.ttl = g_env.ttl ? g_env.ttl : 60;
 	set_sockopts(g_env.sockfd);
 }
