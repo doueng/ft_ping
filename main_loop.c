@@ -41,10 +41,11 @@ static void		print_echoreply(struct ip *ip_recv,
 	char src_addr[INET_ADDRSTRLEN + 1];
 
 	g_env.echoreplys++;
-	printf("%u bytes from (%s): icmp_seq=%hu ttl=%hhu time=%.2f ms\n",
+	printf("%u bytes from (%s): icmp_seq=%hu ttl=%u time=%.2f ms\n",
 		revbytes16(ip_recv->ip_len) - (uint16_t)sizeof(struct ip),
 		get_ipstr(src_addr, &ip_recv->ip_src),
 		revbytes16(icmp_recv->icmp_seq),
+		/* revbytes16(icmp_recv->icmp_lifetime), */
 		ip_recv->ip_ttl,
 		get_triptime(send_time, recv_time));
 }

@@ -1,3 +1,4 @@
 *.o
 ft_ping
 *.a
+compile_commands.json
