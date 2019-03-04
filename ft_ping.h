@@ -43,7 +43,8 @@ enum
 	SOCKET,
 	USAGE,
 	SIGNAL,
-	INVALID_OPTION
+	INVALID_OPTION,
+	ROOT
 };
 
 enum

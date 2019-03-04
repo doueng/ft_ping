@@ -64,6 +64,8 @@ int			main(int argc, char *argv[])
 	char	c;
 	char	*destination;
 
+	if(getuid() != 0)
+		x(-1, ROOT);
 	ft_bzero(&g_env, sizeof(g_env));
 	destination = parse_args(argc, argv);
 	set_signals();

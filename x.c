@@ -25,6 +25,7 @@ static char	*get_error_msg(int error)
 	msg = error == SOCKET ? "socket failed" : msg;
 	msg = error == SIGNAL ? "signal failed" : msg;
 	msg = error == INVALID_OPTION ? "Invaid option" : msg;
+	msg = error == ROOT ? "ft_ping needs to be run as root" : msg;
 	return (msg);
 }
 
