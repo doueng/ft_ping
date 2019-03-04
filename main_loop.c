@@ -13,7 +13,7 @@
 #include "ft_ping.h"
 
 static double	get_triptime(struct timeval *send_time,
-							 struct timeval *recv_time)
+							struct timeval *recv_time)
 {
 	double diff_ms;
 
@@ -38,11 +38,13 @@ static void		print_echoreply(struct ip *ip_recv,
 								struct timeval *send_time,
 								struct timeval *recv_time)
 {
-	char src_addr[INET_ADDRSTRLEN + 1];
+	char		src_addr[INET_ADDRSTRLEN + 1];
+	uint16_t	recv_bytes;
 
+	recv_bytes = revbytes16(ip_recv->ip_len) - ((uint16_t)sizeof(struct ip));
 	g_env.echoreplys++;
 	printf("%u bytes from (%s): icmp_seq=%hu ttl=%u time=%.2f ms\n",
-		revbytes16(ip_recv->ip_len) - (uint16_t)sizeof(struct ip),
+		recv_bytes,
 		get_ipstr(src_addr, &ip_recv->ip_src),
 		revbytes16(icmp_recv->icmp_seq),
 		ip_recv->ip_ttl,
