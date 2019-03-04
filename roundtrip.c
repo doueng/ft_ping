@@ -62,17 +62,19 @@ float			roundtrip_stddev(void)
 	float		avg;
 	float		variance;
 	t_packet	*curr;
+	float		curr_variance;
 
 	avg = roundtrip_avg();
 	curr = g_env.packets;
 	variance = 0;
 	while (curr)
 	{
-		variance += (curr->triptime - avg) * (curr->triptime - avg);
+		curr_variance = curr->triptime - avg;
+		variance += curr_variance > 0 ? curr_variance : curr_variance * -1;
 		curr = curr->next;
 	}
 	variance /= g_env.packets_recv;
-	return (ft_sqrt_double(variance));
+	return(variance);
 }
 
 void			free_packets(void)
