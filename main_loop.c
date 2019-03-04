@@ -84,5 +84,10 @@ void			main_loop(void)
 		: print_icmp(&ip_recv, &icmp_recv);
 		add_packet(&send_time, &recv_time);
 	}
+	else
+	{
+		gettimeofday(&recv_time, NULL);
+		g_env.total_time += get_triptime(&send_time, &recv_time) - 1000;
+	}
 	alarm(1);
 }
