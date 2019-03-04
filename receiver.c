@@ -27,14 +27,6 @@ static void	update_msghdr(struct msghdr *msg)
 	msg->msg_iov[0].iov_len = g_env.data_size;
 }
 
-uint32_t			revbytes32(uint32_t bytes)
-{
-	return ((bytes << 24)
-	| ((bytes << 8) & 0x00ff0000)
-	| ((bytes >> 8) & 0x0000ff00)
-	| (bytes >> 24));
-}
-
 struct icmp	*receiver(struct ip *ip_recv, struct icmp *icmp_recv)
 {
 	int					ret;
