@@ -1,7 +1,8 @@
 NAME = ./ft_ping
 HEADER = ./ft_ping.h
 LIB = ./libft/libft.a
-FLAGS = -Werror -Wextra -Wall -g
+CC = clang
+FLAGS = -Werror -Wextra -Wall
 SRC = checksum.c \
 	creator.c \
 	revbytes.c \
@@ -19,10 +20,10 @@ all: $(NAME)
 
 $(NAME): $(SRCO) $(HEADER)
 	@make -C libft
-	gcc $(SRCO) $(LIB) -o $(NAME)
+	@$(CC) $(SRCO) $(FLAGS) $(LIB) -o $(NAME)
 
 %.o: %.c
-	@gcc -c $(FLAGS) $< -o $@
+	@$(CC) -c $(FLAGS) $< -o $@
 
 clean:
 	@/bin/rm -f $(SRCO)
@@ -34,4 +35,4 @@ fclean: clean
 	@/bin/rm -f $(NAME)
 	@make fclean -C libft
 
-re: fclean all
+re: clean fclean all

@@ -40,10 +40,7 @@ static char	*parse_args(int argc, char *argv[])
 	if ((*++argv)[0] == '-')
 		g_env.options = get_options(*argv++);
 	if (g_env.options & H_OP)
-	{
-		printf("Usage: ./ft_ping [-vh] destination\n");
-		exit(0);
-	}
+		x(-1, USAGE);
 	if (g_env.options & T_OP && argc < 4)
 		x(-1, USAGE);
 	if (g_env.options & T_OP)

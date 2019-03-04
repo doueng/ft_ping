@@ -14,19 +14,17 @@
 
 static void	update_msghdr(struct msghdr *msg)
 {
-	struct iovec		*iov;
 	struct sockaddr_in	sin;
 	char				*databuff;
 
-	databuff = xv(ft_memalloc(sizeof(struct ip) + sizeof(struct icmp)), MALLOC);
+	databuff = xv(ft_memalloc(g_env.data_size), MALLOC);
 	ft_bzero(&sin, sizeof(sin));
-	iov = xv(ft_memalloc(sizeof(*iov)), MALLOC);
 	msg->msg_name = &sin;
 	msg->msg_namelen = sizeof(sin);
-	msg->msg_iov = iov;
+	msg->msg_iov = xv(ft_memalloc(sizeof(struct iovec)), MALLOC);
 	msg->msg_iovlen = 1;
-	iov[0].iov_base = databuff;
-	iov[0].iov_len = g_env.data_size;
+	msg->msg_iov[0].iov_base = databuff;
+	msg->msg_iov[0].iov_len = g_env.data_size;
 }
 
 uint32_t			revbytes32(uint32_t bytes)
@@ -49,10 +47,9 @@ struct icmp	*receiver(struct ip *ip_recv, struct icmp *icmp_recv)
 	ret = recvmsg(g_env.sockfd, &msg, MSG_WAITALL);
 	ft_memcpy(ip_recv, databuff, sizeof(*ip_recv));
 	ft_memcpy(icmp_recv, databuff + sizeof(*ip_recv), sizeof(*icmp_recv));
-	if (revbytes16(icmp_recv->icmp_id) != g_env.id)
-		receiver(ip_recv, icmp_recv);
 	free(databuff);
 	free(msg.msg_iov);
-	g_env.packets_recv += (ret == -1) ? 0 : 1;
+	if (revbytes16(icmp_recv->icmp_type == ICMP_ECHOREPLY))
+		g_env.packets_recv += (ret == -1) ? 0 : 1;
 	return ((ret == -1) ? NULL : icmp_recv);
 }

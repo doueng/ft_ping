@@ -19,7 +19,6 @@ void			set_signals(void)
 		x(-1, SIGNAL);
 }
 
-
 void			sig_alarm(int sigid)
 {
 	if (sigid != SIGALRM)
@@ -67,8 +66,8 @@ void			sig_term(int sigid)
 		printf("%.3f/", roundtrip_max());
 		printf("%.3f", roundtrip_stddev());
 		printf(" ms\n");
-		free_packets();
 	}
+	free_packets();
 	ft_freeaddr();
 	exit(0);
 }
