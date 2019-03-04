@@ -45,7 +45,6 @@ static void		print_echoreply(struct ip *ip_recv,
 		revbytes16(ip_recv->ip_len) - (uint16_t)sizeof(struct ip),
 		get_ipstr(src_addr, &ip_recv->ip_src),
 		revbytes16(icmp_recv->icmp_seq),
-		/* revbytes16(icmp_recv->icmp_lifetime), */
 		ip_recv->ip_ttl,
 		get_triptime(send_time, recv_time));
 }

@@ -36,7 +36,6 @@ int			x(int res, int error)
 			fprintf(stderr, "Error: %s\n", get_error_msg(error));
 		else
 			fprintf(stderr, "Usage: ./ft_ping [-vh] [-t ttl] destination\n");
-
 		exit(-1);
 	}
 	return (res);

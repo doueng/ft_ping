@@ -1,7 +1,7 @@
 NAME = ./ft_ping
 HEADER = ./ft_ping.h
 LIB = ./libft/libft.a
-CC = clang
+CC = gcc
 FLAGS = -Werror -Wextra -Wall
 SRC = checksum.c \
 	creator.c \
