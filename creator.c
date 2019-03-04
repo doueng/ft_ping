@@ -40,7 +40,7 @@ static void				set_sockopts(int sockfd)
 	timeout.tv_usec = 0;
 	x(setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout))
 		, SETSOCK);
-	ttl = 60;
+	ttl = 64;
 	x(setsockopt(sockfd, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl)), SETSOCK);
 }
 
