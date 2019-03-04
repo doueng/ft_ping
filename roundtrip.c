@@ -74,7 +74,7 @@ float			roundtrip_stddev(void)
 		curr = curr->next;
 	}
 	variance /= g_env.packets_recv;
-	return(variance);
+	return (variance);
 }
 
 void			free_packets(void)
