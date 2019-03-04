@@ -54,10 +54,11 @@ void			sig_term(int sigid)
 	alarm(0);
 	printf("--- %s ping statistics ---\n", g_env.arg);
 	printf(
-		"%zu packets transmitted, %zu received, %.1f%% packet loss\n",
+		"%zu packets transmitted, %zu received, %.1f%% packet loss, ",
 		g_env.packets_sent,
 		g_env.packets_recv,
 		calc_packet_loss(g_env.packets_sent, g_env.packets_recv));
+	printf("time %zums\n", (size_t)g_env.total_time);
 	if (g_env.echoreplys > 0)
 	{
 		printf("rtt min/avg/max/stddev = ");

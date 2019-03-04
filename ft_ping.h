@@ -75,6 +75,7 @@ typedef struct		s_env
 	int				echoreplys;
 	int				id;
 	int				ttl;
+	double			total_time;
 }					t_env;
 
 extern t_env		g_env;
