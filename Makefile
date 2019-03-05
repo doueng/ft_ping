@@ -35,4 +35,4 @@ fclean: clean
 	@/bin/rm -f $(NAME)
 	@make fclean -C libft
 
-re: clean fclean all
+re: fclean all
